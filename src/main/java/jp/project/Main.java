@@ -1,17 +1,84 @@
 package jp.project;
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
-public class Main {
-    public static void main(String[] args) {
-        //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
-        // to see how IntelliJ IDEA suggests fixing it.
-        System.out.printf("Hello and welcome!");
+import jp.project.model.Biblioteca;
+import jp.project.model.Libro;
+import jp.project.model.Usuario;
 
-        for (int i = 1; i <= 5; i++) {
-            //TIP Press <shortcut actionId="Debug"/> to start debugging your code. We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint
-            // for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.
-            System.out.println("i = " + i);
-        }
+import java.util.Scanner;
+public class Main
+{
+    public static void main(String[] args)
+    {
+        Scanner dato = new Scanner(System.in);
+        Biblioteca biblioteca = new Biblioteca();
+        int opcion;
+        String menu= """
+                ##########################
+                #####_MENU_BIBLIOTECA_####
+                1. Agregar libro
+                2. Registar usuario
+                3. Prestar libro
+                4. Devolver libro
+                5. Mostrar libro
+                ##########################
+                0. Salir
+                ##########################""";
+        do {
+            System.out.println(menu);
+            opcion=dato.nextInt();
+            switch (opcion)
+            {
+                case 1:
+                    System.out.println("Ingrese el titulo del libro");
+                    String titulo=dato.nextLine();
+                    System.out.println("Ingrese el autor del libro");
+                    String autor=dato.nextLine();
+                    System.out.println("Ingrese el titulo del libro");
+                    String isbn=dato.nextLine();
+                    Libro libro=new Libro(titulo,autor,isbn,true);
+                    biblioteca.agregarLibro(libro);
+                    break;
+                case 2:
+                    System.out.print("Ingrese el nombre del usuario: ");
+                    String nombreUsuario = dato.nextLine();
+                    System.out.print("Ingrese el ID del usuario: ");
+                    int idUser = dato.nextInt();
+                    dato.nextLine(); // Consume la nueva línea
+
+                    Usuario usuario = new Usuario(nombreUsuario, idUser);
+                    biblioteca.registrarUsuario(usuario);
+                    break;
+                case 3:
+                    // Prestar libro
+                    System.out.print("Ingrese el ISBN del libro a prestar: ");
+                    String isbnPrestar = dato.nextLine();
+                    System.out.print("Ingrese el ID del usuario que tomará el libro prestado: ");
+                    int idUsuarioPrestar = dato.nextInt();
+                    dato.nextLine(); // Consume la nueva línea
+
+                    biblioteca.prestarLibro(isbnPrestar, idUsuarioPrestar);
+                    break;
+                case 4:
+                    // Devolver libro
+                    System.out.print("Ingrese el ISBN del libro a devolver: ");
+                    String isbnDevolver = dato.nextLine();
+                    System.out.print("Ingrese el ID del usuario que devuelve el libro: ");
+                    int idUsuarioDevolver = dato.nextInt();
+                    dato.nextLine(); // Consume la nueva línea
+
+                    biblioteca.devolverLibro(isbnDevolver, idUsuarioDevolver);
+                    break;
+                case 5:
+                    // Mostrar libros disponibles
+                    biblioteca.mostrarLibrosDisponibles();
+                    break;
+                case 6:
+                    System.out.println("Saliendo del programa...");
+                    dato.close();
+                    return;
+                default:
+                    System.out.println("Opción no válida. Intente de nuevo.");
+            }
+        } while(opcion==0);
     }
 }
