@@ -8,13 +8,14 @@ import java.util.List;
 public class Biblioteca
 {
     public void agregarLibro(Libro libro) {
-        String sql = "INSERT INTO libros (isbn, titulo, autor, disponible) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO libros (isbn, titulo, autor, disponible,cantidad) VALUES (?,?, ?, ?, ?)";
         try (Connection conexion = ConexionBD.conectar();
              PreparedStatement pstmt = conexion.prepareStatement(sql)) {
             pstmt.setString(1, libro.getIsbn());
             pstmt.setString(2, libro.getTitulo());
             pstmt.setString(3, libro.getAutor());
             pstmt.setBoolean(4, libro.isDisponible());
+            pstmt.setInt(5,libro.getCant());
             pstmt.executeUpdate();
             System.out.println("Libro agregado: " + libro.getTitulo());
         } catch (SQLException e) {
@@ -63,6 +64,7 @@ public class Biblioteca
             System.err.println("Error al devolver libro: " + e.getMessage());
         }
     }
+    /*
     public Libro buscarLibro(String isbn) {
         String sql = "SELECT * FROM libros WHERE isbn = ?";
         try (Connection conexion = ConexionBD.conectar();
@@ -70,7 +72,7 @@ public class Biblioteca
             pstmt.setString(1, isbn);
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
-                Libro libro = new Libro(rs.getString("titulo"),rs.getString("autor"),rs.getString("isbn"),rs.getBoolean("disponible"));
+                Libro libro = new Libro(rs.getString("titulo"),rs.getString("autor"),rs.getString("isbn"),rs.getBoolean("disponible"),rs.getInt("cantidad"));
                 libro.devolver(); // Asegúrate de que el estado 'disponible' se actualice correctamente
                 return libro;
             }
@@ -79,8 +81,9 @@ public class Biblioteca
         }
         return null;
     }
+    */
     public void mostrarLibrosDisponibles() {
-        String sql = "SELECT * FROM libros WHERE disponible = TRUE";
+        String sql = "SELECT * FROM libros";
         try (Connection conexion = ConexionBD.conectar();
              Statement stmt = conexion.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
@@ -89,12 +92,14 @@ public class Biblioteca
                 System.out.println("Título: " + rs.getString("titulo"));
                 System.out.println("Autor: " + rs.getString("autor"));
                 System.out.println("ISBN: " + rs.getString("isbn"));
-                System.out.println("---");
+                System.out.println("Cantidad disponible: "+rs.getInt("cantidad"));
+                System.out.println("Disponible: "+rs.getBoolean("disponible"));
             }
         } catch (SQLException e) {
             System.err.println("Error al mostrar libros disponibles: " + e.getMessage());
         }
     }
+    /*
     private Usuario buscarUsuario(int idUser) {
         String sql = "SELECT * FROM usuarios WHERE id_usuario = ?";
         try (Connection conexion = ConexionBD.conectar();
@@ -110,4 +115,5 @@ public class Biblioteca
         }
         return null;
     }
+    */
 }
